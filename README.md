@@ -21,7 +21,7 @@ $ go run main.go -help
   -property-tax float
         property tax rate, e.g. 0.0079 for 0.79% (default 0.0079)
   -term-years int
-        mortgage term in years, e.g. 30 or 15 (default 30
+        mortgage term in years, e.g. 30 or 15 (default 30)
 
 $ go run main.go
 House Price: 300000
