@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"math"
+	"os"
 )
 
 const (
@@ -23,8 +24,6 @@ var (
 	interestRate     float64
 	propertyTaxRate  float64
 	insurancePayment int
-
-	// todo: pmi, fha
 )
 
 func init() {
@@ -39,32 +38,34 @@ func init() {
 }
 
 func main() {
-	// Read back input.
-	fmt.Println("House Price:", housePrice)
-	fmt.Println("Mortgage Term (Years):", termYears)
+	// Validate input.
+	totalDown := downPayment + int((float64(housePrice) * downPercent))
+	totalDownPct := float64(totalDown) / float64(housePrice)
+	mortgageAmount := housePrice - totalDown
+	if totalDownPct < 0.035 {
+		fmt.Printf("ERROR: Down payment (%.2f%%) must be at least 3.5%% for FHA loans or 20%% for Conventional loans!", totalDownPct*100)
+		os.Exit(1)
+	}
+
+	fmt.Printf("House Price: $%d\n", housePrice)
+	fmt.Printf("Down Payment: $%d (%.2f%%)\n", totalDown, totalDownPct*100)
+	fmt.Printf("Mortage Amount: $%d\n", mortgageAmount)
+	fmt.Printf("Mortgage Term (Years): %d\n", termYears)
 	fmt.Printf("Interest Rate: %.2f%%\n", interestRate*100)
 	fmt.Printf("Property Tax Rate: %.2f%%\n", propertyTaxRate*100)
 	fmt.Printf("Annual Homeowner's Insurance Cost: $%d\n", insurancePayment)
 	fmt.Println()
 
 	// Calculate monthly payments.
-	totalDown := downPayment + int((float64(housePrice) * downPercent))
-	mortgageAmount := housePrice - totalDown
 	principalAndInterest := computePrincipalAndInterest(mortgageAmount)
 	insurance := float64(insurancePayment) / 12
 	taxes := float64(housePrice) * propertyTaxRate / 12
 	total := principalAndInterest + insurance + taxes
 
-	// Show results.
-	fmt.Printf("Down Payment: $%d\n", totalDown)
-	fmt.Printf("Mortage Amount: $%d\n", mortgageAmount)
-	fmt.Println()
-
-	fmt.Println("Monthly Payment:")
+	fmt.Printf("Monthly Payment: $%.2f\n", total)
 	fmt.Printf("- Principal & Interest: $%.2f\n", principalAndInterest)
 	fmt.Printf("- Homeowner's Insurance: $%.2f\n", insurance)
 	fmt.Printf("- Property Taxes: $%.2f\n", taxes)
-	fmt.Printf("- Total: $%.2f\n", total)
 }
 
 // Computes average monthly principal and interest payments over the lifetime of the loan.

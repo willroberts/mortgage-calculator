@@ -24,18 +24,20 @@ $ go run main.go -help
         mortgage term in years, e.g. 30 or 15 (default 30)
 
 $ go run main.go
-House Price: 300000
+House Price: $300000
+Down Payment: $60000 (20.00%)
+Mortage Amount: $240000
 Mortgage Term (Years): 30
 Interest Rate: 2.75%
 Property Tax Rate: 0.79%
 Annual Homeowner's Insurance Cost: $1200
 
-Down Payment: $60000
-Mortage Amount: $240000
-
-Monthly Payment:
+Monthly Payment: $1277.28
 - Principal & Interest: $979.78
 - Homeowner's Insurance: $100.00
 - Property Taxes: $197.50
-- Total: $1277.28
 ```
+
+## To Do
+
+- Add PMI for down payments under 20%.
