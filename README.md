@@ -1,8 +1,8 @@
 # mortgage-calculator
 
 Calculates monthly mortgage payments, including property taxes and homeowner's
-insurance, for configurable values of house prices, down payments, interest
-rates, property tax rates, and homeowner's insurance costs.
+insurance, for configurable values of house prices, down payments, mortgage
+durations, interest rates, property tax rates, and homeowner's insurance costs.
 
 ## Usage
 

@@ -12,7 +12,7 @@ const (
 	defaultDownPercent      = 0.2    // Standard 20% to avoid PMI.
 	defaultTermYears        = 30     // Standard 30-year mortgage.
 	defaultInterestRate     = 0.0275 // Feb 2021 interest rate.
-	defaultPropertyTaxRate  = 0.0079 // Sample county property tax rate.
+	defaultPropertyTaxRate  = 0.0079 // Sample county-level property tax rate.
 	defaultInsurancePayment = 1200   // Average annual homeowner's insurance costs.
 )
 
