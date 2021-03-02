@@ -8,22 +8,24 @@ import (
 )
 
 const (
-	defaultHousePrice       = 300000 // Median U.S. home price Feb 2021.
-	defaultDownPercent      = 0.2    // Standard 20% to avoid PMI.
-	defaultTermYears        = 30     // Standard 30-year mortgage.
-	defaultInterestRate     = 0.0275 // Feb 2021 interest rate.
-	defaultPropertyTaxRate  = 0.0079 // Sample county-level property tax rate.
-	defaultInsurancePayment = 1200   // Average annual homeowner's insurance costs.
+	defaultHousePrice            = 300000 // Median U.S. home price Feb 2021.
+	defaultDownPercent           = 0.2    // Standard 20% to avoid PMI.
+	defaultTermYears             = 30     // Standard 30-year mortgage.
+	defaultInterestRate          = 0.0275 // Feb 2021 interest rate.
+	defaultMortgageInsuranceRate = 0.01   // Average PMI rate.
+	defaultPropertyTaxRate       = 0.0079 // Sample county-level property tax rate.
+	defaultInsurancePayment      = 1200   // Average annual homeowner's insurance costs.
 )
 
 var (
-	housePrice       int
-	downPayment      int
-	downPercent      float64
-	termYears        int
-	interestRate     float64
-	propertyTaxRate  float64
-	insurancePayment int
+	housePrice            int
+	downPayment           int
+	downPercent           float64
+	termYears             int
+	interestRate          float64
+	mortgageInsuranceRate float64
+	propertyTaxRate       float64
+	insurancePayment      int
 )
 
 func init() {
@@ -32,6 +34,7 @@ func init() {
 	flag.Float64Var(&downPercent, "down-payment-pct", defaultDownPercent, "down payment (percent of house price), e.g. 0.2 for 20%")
 	flag.IntVar(&termYears, "term-years", defaultTermYears, "mortgage term in years, e.g. 30 or 15")
 	flag.Float64Var(&interestRate, "interest-rate", defaultInterestRate, "interest rate, e.g. 0.0275 for 2.75%")
+	flag.Float64Var(&mortgageInsuranceRate, "mortgage-insurance-rate", defaultMortgageInsuranceRate, "pmi insurance rate, e.g. 0.01 for 1%")
 	flag.Float64Var(&propertyTaxRate, "property-tax", defaultPropertyTaxRate, "property tax rate, e.g. 0.0079 for 0.79%")
 	flag.IntVar(&insurancePayment, "homeowners-insurance", defaultInsurancePayment, "annual homeowner's insurance payment")
 	flag.Parse()
@@ -58,14 +61,24 @@ func main() {
 
 	// Calculate monthly payments.
 	principalAndInterest := computePrincipalAndInterest(mortgageAmount)
+	var pmi float64 = 0
+	if totalDownPct < defaultDownPercent {
+		pmi = float64(housePrice) * mortgageInsuranceRate / 12
+	}
 	insurance := float64(insurancePayment) / 12
 	taxes := float64(housePrice) * propertyTaxRate / 12
 	total := principalAndInterest + insurance + taxes
+	if pmi > 0 {
+		total += pmi
+	}
 
 	fmt.Printf("Monthly Payment: $%.2f\n", total)
 	fmt.Printf("- Principal & Interest: $%.2f\n", principalAndInterest)
 	fmt.Printf("- Homeowner's Insurance: $%.2f\n", insurance)
 	fmt.Printf("- Property Taxes: $%.2f\n", taxes)
+	if pmi > 0 {
+		fmt.Printf("- Private Mortgage Insurance: $%0.2f\n", pmi)
+	}
 }
 
 // Computes average monthly principal and interest payments over the lifetime of the loan.

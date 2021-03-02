@@ -18,6 +18,8 @@ $ go run main.go -help
         house price (default 300000)
   -interest-rate float
         interest rate, e.g. 0.0275 for 2.75% (default 0.0275)
+  -mortgage-insurance-rate float
+        pmi insurance rate, e.g. 0.01 for 1% (default 0.01)
   -property-tax float
         property tax rate, e.g. 0.0079 for 0.79% (default 0.0079)
   -term-years int
@@ -37,7 +39,3 @@ Monthly Payment: $1277.28
 - Homeowner's Insurance: $100.00
 - Property Taxes: $197.50
 ```
-
-## To Do
-
-- Add PMI for down payments under 20%.
